@@ -6,7 +6,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)  # 允许跨域，方便前端调用
 
-DB_FILE = 'instance/blog.db'
+DB_FILE = os.getenv('DB_PATH', 'instance/blog.db')
 
 def get_db_connection():
     conn = sqlite3.connect(DB_FILE)
@@ -81,5 +81,5 @@ def update_post(post_id):
     return jsonify({'id': post_id, 'name': name, 'job': job, 'favorite_color': favorite_color})
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    port = int(os.getenv('PORT', 5000))  # 默认 5000，Railway 会覆盖
+    app.run(host='0.0.0.0', port=port, debug=False)  # 生产环境禁用 debug
